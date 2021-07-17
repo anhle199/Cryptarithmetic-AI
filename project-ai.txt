@@ -1,0 +1,80 @@
+https://github.com/mohilpatel25/cryptarithmetic-puzzle-solver/blob/main/CryptArithmetic.py
+
+csp: 
+	- variables: alphabet
+	- domains: 0-9
+	- constraints: 
+		- alldiff
+
+
+variables = [F, T, U, W, R, O]
+variables_bool = [false, false, false, false, false, false]
+
+domains = [
+	'F': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+	'T': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+	'U': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+	'W': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+	'R': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+	'O': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+]
+
+assignment = [
+	'variable': value
+]
+
+
+def read_file(filename)
+def write_file(filename)
+
+
+
+
+
+
+
+
+def alldiff
+def same_operand
+def sum_last_col_>=10
+
+
+def order_domain_values(csp, var):
+	return LCV(csp, var)
+
+def solve(csp):
+	same_operand(csp)
+	sum_last_col_>=10(csp)
+	return backtrack({}, csp)
+
+def backtrack(assignment, csp):
+	if assignment full and (operand 1 + operand 2 = operand 3)
+		return assignment
+
+	var = DH(csp)
+	for val in order_domain_values(csp, var):
+		if val not in assignment and 
+			assignment.append({var: val})
+			inferences = inference(csp, var, val)  // {csp_removed, status}: status là true nếu còn gán được
+
+			if inferences == true:
+				result = backtrack(assignment, csp)
+
+				if result == true: // có kết quả
+					return result
+				
+				
+			csp.append(csp_removed)
+			assignment.pop({var: val})
+			csp.remove({var: val})
+
+	return false
+
+main() {
+	đề = read_file(filename)
+	csp = create_domain(đề) // đọc từ phải qua trái, trên xuống dưới
+	assignment = solve(csp)
+	write_file(filename, assignment)
+	print(assignment)
+}
+

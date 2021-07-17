@@ -1,0 +1,41 @@
+		T W O
+		T W O
+	  F O U R
+csp: 
+	- variables: alphabet
+	- domains: 0-9
+	- constraints: {
+		"columns_constraint": [
+		"O + O = R + 10 * c1",
+		"W + W = U + 10 * c2",
+		"T + T = O + 10 * c3"
+		],
+		"same_operand": [false, false, false]
+	}
+
+#
+same_operand => sum >= 2 and sum is even number
+Notes: queue (lưu những chữ đã duyệt trước đó) để duyệt ngược lại. Dừng khi queue rỗng.
+#
+sum_last_col_>=10 => Nếu có chữ thì chữ bằng 1
+#
+
+variables = [F, T, U, W, R, O]
+variables_bool = [false, false, false, false, false, false]
+
+domains = {
+	O: [2, 4, 6, 8],
+	W: [1, 2, 3, 4, 5, 6, 7, 8, 9],
+	T: [1, 2, 3, 4, 5, 6, 7, 8, 9],
+	R: [2, 4, 6, 8],
+	U: [2, 4, 6, 8],
+	F: [1],
+}
+
+assignment = {
+	
+}
+
+
+
+
