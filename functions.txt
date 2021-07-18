@@ -15,22 +15,23 @@
 
 
 
-data: (operands, operators, result): tuple
+data: dict { operands, operators, result }
 
-csp: tuple
+csp: dict {
 	variables = [] // operand + result
 	variables_in_operand = { // operand
 		character: (count_constraint, visited)
 	}
 	constraints: ["", "", ""]
 	domains = { character: [numbers] }
+}
 
 assignment: dict = { character: number }
 
 clone_domains_of_var: use deepcopy
 
-inferences: tuple = (
+inferences: dict = {
 	domains_removed: { character: number },
 	status: true
-)
+}
 // status là true nếu còn gán được
