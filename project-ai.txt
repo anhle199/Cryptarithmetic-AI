@@ -27,25 +27,19 @@ assignment = [
 def read_file(filename)
 def write_file(filename)
 
-
-
-
-
-
-
-
 def alldiff
 def same_operand
 def sum_last_col_>=10
 
 
-def order_domain_values(csp, var):
-	return LCV(csp, var)
-
 def solve(csp):
 	same_operand(csp)
 	sum_last_col_>=10(csp)
-	return backtrack({}, csp)
+
+	assignment = {}
+	hasSolution = backtrack(assignment, csp)
+	if hasSolution:
+		return assignment
 
 def backtrack(assignment, csp):
 	if assignment full and (operand 1 + operand 2 = operand 3)
