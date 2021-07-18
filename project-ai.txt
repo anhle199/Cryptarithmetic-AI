@@ -1,9 +1,9 @@
 https://github.com/mohilpatel25/cryptarithmetic-puzzle-solver/blob/main/CryptArithmetic.py
 
-csp: 
+csp:
 	- variables: alphabet
 	- domains: 0-9
-	- constraints: 
+	- constraints:
 		- alldiff
 
 
@@ -41,38 +41,42 @@ def solve(csp):
 	if hasSolution:
 		return assignment
 
-def backtrack(assignment, csp):
-	if assignment full and (operand 1 + operand 2 = operand 3)
+def backtrack(data, assignment, csp):
+	if assignment is full and sum_cryptarithmetic(data, assignment)
 		return assignment
 
-	var = DH(csp)
-	for val in order_domain_values(csp, var):
-		if val not in assignment and 
+	var = degree_heuristic(csp)
+	csp.variables[var].status = true
+	domains = copy.deepcopy(csp.domains[var])
+	for val in domains:
+		if val not in assignment
 			assignment.append({var: val})
-			inferences = inference(csp, var, val)  // {csp_removed, status}: status là true nếu còn gán được
+			inferences = inference(csp, var, val)
 
 			if inferences == true:
-				clone_next_char = csp.domains[next_char]
-
-				result = backtrack(assignment, csp)
-
-				csp.domains[next_char] = clone_next_char			
+				clone_next_char = copy.deepcopy(csp.domains[next_char])
+				result = backtrack(data, assignment, csp)
+				csp.domains[next_char] = copy.deepcopy(clone_next_char)
 
 				if result == true: // có kết quả
 					return result
-				
-				
+
 			csp.append(csp_removed)
 			assignment.pop({var: val})
 			csp.remove({var: val})
 
+	csp.variables[var].status = false
 	return false
 
 main() {
-	đề = read_file(filename)
-	csp = create_domain(đề) // đọc từ phải qua trái, trên xuống dưới
-	assignment = solve(csp)
+	data = read_file(filename)
+	csp = create_csp(data) // đọc từ phải qua trái, trên xuống dưới
+	assignment = solve(data, csp)
 	write_file(filename, assignment)
-	print(assignment)
+
+	if assignment is empty
+		print("NO SOLUTION)
+	else
+		print(assignment)
 }
 

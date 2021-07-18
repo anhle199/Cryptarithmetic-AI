@@ -1,13 +1,23 @@
-1. read_file(filename): {"operands", "operators", "result" }
+1. read_file(filename): (operands, operators, result): data
 2. write_file(filename, number)
-3. same_operand(csp)
-4. (csp) // tổng cột đầu lớn hơn 10
-5. solve(csp): {character: number} or None
-6. backtrack(assignment, csp): true or false
-7. degree_heuristic(csp): character
-8. inference(csp, var, val): {csp_removed, status}
+3. solve(data, csp): {character: number} or None
 
-csp: 
+4. create_csp(data)
+5. same_operand(data, csp)
+6. (data, csp) // tổng cột đầu lớn hơn 10
+
+7. backtrack(data, assignment, csp): true or false
+8. degree_heuristic(csp): character
+9. inference(csp, var, val): (csp_removed, status): tuple
+
+10. sum_cryptarithmetic(data, assignment): true or false
+
+
+
+
+data: (operands, operators, result): tuple
+
+csp:
 	variables = [] // operand + result
 	variables = { // operand
 		character: (count_constraint, status)
@@ -19,7 +29,8 @@ assignment = { character: number }
 
 clone_domains_of_variable: use deepcopy
 
-inferences = {
+inferences = (
 	csp_removed: { character: number },
 	status: true
-}
+): tuple
+// status là true nếu còn gán được
