@@ -1,0 +1,25 @@
+1. read_file(filename): {"operands", "operators", "result" }
+2. write_file(filename, number)
+3. same_operand(csp)
+4. (csp)
+5. solve(csp): {character: number} or None
+6. backtrack(assignment, csp): true or false
+7. degree_heuristic(csp): character
+8. inference(csp, var, val): {csp_removed, status}
+
+csp: 
+	variables = [] // operand + result
+	variables = { // operand
+		character: (count_constraint, status)
+	}
+	constraints: ["", "", ""]
+	domains = { character: [numbers] }
+
+assignment = { character: number }
+
+clone_domains_of_variable: use deepcopy
+
+inferences = {
+	csp_removed: { character: number },
+	status: true
+}
