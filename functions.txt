@@ -7,8 +7,8 @@
 6. (data, csp) // tổng cột đầu lớn hơn 10
 
 7. backtrack(data, assignment, csp): true or false
-8. degree_heuristic(csp): character
-9. inference(csp, var, val): (csp_removed, status): tuple
+8. degree_heuristic(csp): character or None
+9. inference(assignment, csp, var, val): {domains_removed, status}: tuple
 
 10. sum_cryptarithmetic(data, assignment): true or false
 
@@ -23,7 +23,7 @@ csp: dict {
 		character: {count_constraint, visited} // dict
 	}
 	constraints: ["", "", ""]
-	domains = { character: [numbers] }
+	domains = { character: {numbers} /*set*/ }
 }
 
 assignment: dict = { character: number }

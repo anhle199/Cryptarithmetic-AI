@@ -5,7 +5,7 @@ O = 1
 R = 2
 W = 5
 U = 0
-csp: 
+csp:
 	- variables: alphabet
 	- domains: 0-9
 	- constraints: {
@@ -17,8 +17,7 @@ csp:
 	}
 
 #
-same_operand => sum >= 2 and sum is even number
-Notes: queue (lưu những chữ đã duyệt trước đó) để duyệt ngược lại. Dừng khi queue rỗng.
+same_operand => sum is even number and is not equal to 0 (only right-most column)
 #
 sum_last_col_>=10 => Nếu có chữ thì chữ bằng 1, bỏ hết tất cả số 1 của các chữ còn lại
 #

@@ -12,3 +12,22 @@ def degree_heuristic(csp):
 
     return var
 
+
+def inference(assignment, csp, var, val):
+    domains_removed = { var: val }
+    status = True
+
+    # remove `val` in domain of all of variables
+    for variable in csp['domains']:
+        if val in csp['domains'][variable]:
+            domains_removed[variable] = val
+            csp['domains'][variable].remove(val)
+
+            if (
+                len(csp['domains'][variable]) == 0 and
+                not csp['variables_in_operand'][variable]['visited']
+            ):
+                status = False
+                break
+
+    return (domains_removed, status)
