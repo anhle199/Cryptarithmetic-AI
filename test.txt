@@ -1,41 +1,75 @@
-		T W O
-		T W O
-	  F O U R
+		W O
+		W O
+	  O U R
+O = 1
+R = 2
+W = 5
+U = 0
 csp: 
 	- variables: alphabet
 	- domains: 0-9
 	- constraints: {
 		"columns_constraint": [
-		"O + O = R + 10 * c1",
-		"W + W = U + 10 * c2",
-		"T + T = O + 10 * c3"
+			"O + O = R + 10 * c1",
+			"W + W = U + 10 * c2",
 		],
-		"same_operand": [false, false, false]
+		"same_operand": [false, false]
 	}
 
 #
 same_operand => sum >= 2 and sum is even number
 Notes: queue (lưu những chữ đã duyệt trước đó) để duyệt ngược lại. Dừng khi queue rỗng.
 #
-sum_last_col_>=10 => Nếu có chữ thì chữ bằng 1
+sum_last_col_>=10 => Nếu có chữ thì chữ bằng 1, bỏ hết tất cả số 1 của các chữ còn lại
 #
 
-variables = [F, T, U, W, R, O]
-variables_bool = [false, false, false, false, false, false]
+
+variables 		 = [O, W]
+count_constraint = [1, 1]
+variables_bool   = [true, false]
 
 domains = {
-	O: [2, 4, 6, 8],
-	W: [1, 2, 3, 4, 5, 6, 7, 8, 9],
-	T: [1, 2, 3, 4, 5, 6, 7, 8, 9],
+	O: [],
+	W: [6, 7, 8, 9],
 	R: [2, 4, 6, 8],
 	U: [2, 4, 6, 8],
-	F: [1],
 }
 
 assignment = {
-	
+	O: 1
 }
+var = O
+val = 1
+order_domain_values(csp, O) = [1]
+inferences = {
+	csp_removed: {{O: 1}},
+	status: true
+}
+clone_W = [2, 3, 4, 5, 6, 7, 8, 9]
+result = true
 
 
 
 
+
+
+
+
+
+
+
+
+
+
+assignment = {
+	O: 1,
+	W: 5
+}
+var = W
+val = 5
+order_domain_values(csp, W) = [5, 6, 7, 8, 9]
+inferences = {
+	csp_removed: {W: 5},
+	status: true
+}
+result = true

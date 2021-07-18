@@ -58,7 +58,11 @@ def backtrack(assignment, csp):
 			inferences = inference(csp, var, val)  // {csp_removed, status}: status là true nếu còn gán được
 
 			if inferences == true:
+				clone_next_char = csp.domains[next_char]
+
 				result = backtrack(assignment, csp)
+
+				csp.domains[next_char] = clone_next_char			
 
 				if result == true: // có kết quả
 					return result
