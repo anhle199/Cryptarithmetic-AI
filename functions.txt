@@ -1,7 +1,7 @@
 1. read_file(filename): {"operands", "operators", "result" }
 2. write_file(filename, number)
 3. same_operand(csp)
-4. (csp)
+4. (csp) // tổng cột đầu lớn hơn 10
 5. solve(csp): {character: number} or None
 6. backtrack(assignment, csp): true or false
 7. degree_heuristic(csp): character
