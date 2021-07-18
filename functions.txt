@@ -18,8 +18,8 @@
 data: (operands, operators, result): tuple
 
 csp: tuple
-	vars = [] // operand + result
-	vars_in_operand = { // operand
+	variables = [] // operand + result
+	variables_in_operand = { // operand
 		character: (count_constraint, status)
 	}
 	constraints: ["", "", ""]
