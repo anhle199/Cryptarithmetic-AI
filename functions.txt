@@ -19,7 +19,7 @@ data: dict { operands, operators, result }
 
 csp: dict {
 	variables = [] // operand + result
-	variables_in_operand = { // operand
+	operands = {
 		character: {count_constraint, visited} // dict
 	}
 	constraints: ["", "", ""]

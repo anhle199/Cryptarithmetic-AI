@@ -37,25 +37,25 @@ def solve(csp):
 	same_operand(csp)
 
 	assignment = {}
-	hasSolution = backtrack(assignment, csp)
+	hasSolution = backtrack(assignment, csp, degree_heuristic(csp))
 	if hasSolution:
 		return assignment
 
-def backtrack(data, assignment, csp):
+def backtrack(data, assignment, csp, var):
 	if assignment is full and sum_cryptarithmetic(data, assignment)
 		return assignment
 
-	var = degree_heuristic(csp)
-	csp.variables[var].status = true
+	csp.operands[var].status = true
 	domains = copy.deepcopy(csp.domains[var])
 	for val in domains:
 		if val not in assignment
 			assignment.append({var: val})
-			inferences = inference(csp, var, val)
+			inferences = inference(assignment, csp, var, val)
 
 			if inferences == true:
+				next_char = degree_heuristic(csp)
 				clone_next_char = copy.deepcopy(csp.domains[next_char])
-				result = backtrack(data, assignment, csp)
+				result = backtrack(data, assignment, csp, next_char)
 				csp.domains[next_char] = copy.deepcopy(clone_next_char)
 
 				if result == true: // có kết quả
@@ -65,7 +65,7 @@ def backtrack(data, assignment, csp):
 			assignment.pop({var: val})
 			csp.remove({var: val})
 
-	csp.variables[var].status = false
+	csp.operands[var].status = false
 	return false
 
 main() {
