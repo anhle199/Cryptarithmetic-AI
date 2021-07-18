@@ -18,8 +18,8 @@
 data: (operands, operators, result): tuple
 
 csp:
-	variables = [] // operand + result
-	variables = { // operand
+	vars = [] // operand + result
+	vars_in_operand = { // operand
 		character: (count_constraint, status)
 	}
 	constraints: ["", "", ""]
@@ -27,10 +27,10 @@ csp:
 
 assignment = { character: number }
 
-clone_domains_of_variable: use deepcopy
+clone_domains_of_var: use deepcopy
 
 inferences = (
-	csp_removed: { character: number },
+	domains_removed: { character: number },
 	status: true
 ): tuple
 // status là true nếu còn gán được
