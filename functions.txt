@@ -1,5 +1,5 @@
 1. read_file(filename): (operands, operators, result): data
-2. write_file(filename, number)
+2. write_file(filename, assignment)
 3. solve(data, csp): {character: number} or None
 
 4. create_csp(data)
