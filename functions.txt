@@ -3,6 +3,7 @@ Hùng
 2. write_file(filename, number)
 3. solve(csp): `assignment` variable or None
 
+
 Huy
 4. create_csp(data): return csp
 5. same_operand(csp): chỉ làm cột đầu tiên bên phải
