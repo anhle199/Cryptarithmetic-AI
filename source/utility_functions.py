@@ -1,4 +1,4 @@
-# Error: return None | Success: return (operands, operators, result)
+# Error: return None | Success: return {'operands': operands, 'operators': operators, 'result': result}
 def read_file(filename):
     # open input file
     try:
@@ -23,7 +23,7 @@ def read_file(filename):
 
     # close file and return result
     f.close()
-    return operands, operators, result # successfully read file
+    return {'operands': operands, 'operators': operators, 'result': result} # successfully read file
 
 # Error: return False | Success: return True
 def write_file(filename, assignment):
