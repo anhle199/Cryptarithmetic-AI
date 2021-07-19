@@ -1,3 +1,29 @@
+def read_file():
+    ## open input file
+    try:
+        f = open("../files/input.txt", "r")
+    except FileNotFoundError:
+        return None ## return None if there is an error in opening input file
+
+    ## variables for returning
+    operands = []
+    operators = []
+    result = ""
+
+    ## process input string
+    import re
+    temp_string = f.readline()
+    for item in re.split(r"([+-=*])", temp_string):
+        if item == "+" or item == "-" or item == "*":
+            operators.append(item)
+        elif item != "=":
+            operands.append(item)
+    result = operands.pop()
+
+    ## close file and return result
+    f.close()
+    return operands, operators, result ## successfully read file
+
 def degree_heuristic(csp):
     var = None
     count_constraint = 0
