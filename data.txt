@@ -1,0 +1,35 @@
+data: dict { operands, operators, result }
+
+
+00TW
+0TWO
+FOUR
+
+operands = [
+    [0, 0],
+    [0, T],
+    [T, W],
+    [W, O]
+]
+operators = [+]
+result = [F, O, U, R]
+carry = 0
+
+csp = {
+    variables: [operands + result],
+    constraints: [
+        {operands: [[]], operators: [], result: [], carry: int}
+    ],
+    visited: { character: true or false },
+    domains: { character: [numbers] }
+}
+
+assignment: dict = { character: number }
+
+clone_domains_of_var: use deepcopy
+
+inferences: dict = {
+	domains_removed: { character: number },
+	status: true
+}
+// status là true nếu còn gán được

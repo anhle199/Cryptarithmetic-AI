@@ -1,18 +1,3 @@
-https://github.com/mohilpatel25/cryptarithmetic-puzzle-solver/blob/main/CryptArithmetic.py
-
-
-def solve(csp):
-	sum_last_col_>=10(csp)
-	same_operand(csp)
-
-	assignment = {}
-	has_solution = backtracking(assignment, csp, len(csp.constraints) - 1, 0)
-	if has_solution:
-		return assignment
-    else:
-        return None
-
-
 def backtracking(assignment, csp, col, i):
     var = csp.constraints[col].operands[i]
     is_calc = (i == len(csp.constraints[col].operands))
@@ -24,17 +9,17 @@ def backtracking(assignment, csp, col, i):
         for val in domains:
             if val not in assignment:
                 assignment[var] = val
-                (domains_removed, status) = inference(assignment, csp, var, val, is_calc)
+                {domains_removed, status} = inference(assignment, csp, var, val, is_calc)
 
                 if status:
                     result = true
                     if is_calc:
                         result = sum_cryptarithmetic(assignment, csp, col, domains_removed)
-                    if col == 0 and is_calc and result:
+                    if col == len(csp.constraints) - 1 and is_calc and result:
                         return result
 
                     if result:
-                        col -= is_calc ? 1 : 0
+                        col += is_calc ? 1 : 0
                         i = is_calc ? 0 : (i + 1)
                         clone_domains_next_char = deepcopy(csp.domains[csp.constraints[col].operands[i]])
                         result = backtracking(assignment, csp, col, i)
@@ -54,8 +39,8 @@ def backtracking(assignment, csp, col, i):
         result = true
         if is_calc:
             result = sum_cryptarithmetic(assignment, csp, col, domains_removed)
-        if not (col == 0 and is_calc) and result:
-            col -= is_calc ? 1 : 0
+        if not (col == len(csp.constraints) - 1 and is_calc) and result:
+            col += is_calc ? 1 : 0
             i = is_calc ? 0 : (i + 1)
             clone_domains_next_char = deepcopy(csp.domains[csp.constraints[col].operands[i]])
             result = backtracking(assignment, csp, col, i)
@@ -64,17 +49,3 @@ def backtracking(assignment, csp, col, i):
             csp.domains.append(domains_removed)
 
         return result
-
-
-main() {
-	data = read_file(filename)
-	csp = create_csp(data) // đọc từ phải qua trái, trên xuống dưới
-	assignment = solve(csp)
-	write_file(filename, assignment)
-
-	if assignment is empty
-		print("NO SOLUTION)
-	else
-		print(assignment)
-}
-

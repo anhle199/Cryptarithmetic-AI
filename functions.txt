@@ -1,37 +1,14 @@
-1. read_file(filename): (operands, operators, result): data
+Hùng
+1. read_file(filename): return `data` variable
 2. write_file(filename, number)
-3. solve(data, csp): {character: number} or None
+3. solve(csp): `assignment` variable or None
 
-4. create_csp(data)
-5. same_operand(data, csp)
-6. (data, csp) // tổng cột đầu lớn hơn 10
+Huy
+4. create_csp(data): return csp
+5. same_operand(csp): chỉ làm cột đầu tiên bên phải
+6. (csp) // tổng cột đầu lớn hơn 10
 
-7. backtrack(data, assignment, csp): true or false
-8. degree_heuristic(csp): character or None
-9. inference(assignment, csp, var, val): {domains_removed, status}: tuple
-
-10. sum_cryptarithmetic(data, assignment): true or false
-
-
-
-
-data: dict { operands, operators, result }
-
-csp: dict {
-	variables = [] // operand + result
-	variables_in_operand = { // operand
-		character: {count_constraint, visited} // dict
-	}
-	constraints: ["", "", ""]
-	domains = { character: {numbers} /*set*/ }
-}
-
-assignment: dict = { character: number }
-
-clone_domains_of_var: use deepcopy
-
-inferences: dict = {
-	domains_removed: { character: number },
-	status: true
-}
-// status là true nếu còn gán được
+Anh
+7. backtracking(assignment, csp, col, row): true or false
+8. inference(assignment, csp, var, val, is_calc): (domains_removed, status): tuple
+9. sum_cryptarithmetic(assignment, csp, col, domains_removed): true or false
