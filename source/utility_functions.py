@@ -1,4 +1,4 @@
-def read_file():
+def read_file(filename):
     ## open input file
     try:
         f = open("../files/input.txt", "r")
