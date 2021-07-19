@@ -6,8 +6,8 @@ def solve(csp):
 	same_operand(csp)
 
 	assignment = {}
-	hasSolution = backtrack(assignment, csp, len(csp.constraints) - 1, 0)
-	if hasSolution:
+	has_solution = backtracking(assignment, csp, len(csp.constraints) - 1, 0)
+	if has_solution:
 		return assignment
     else:
         return None
