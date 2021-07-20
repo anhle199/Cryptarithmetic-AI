@@ -51,7 +51,6 @@ def write_file(filename, assignment):
     return True # return True if creating file successfully
 
 def solve(csp):
-	infer_last_col(csp)
 	infer_same_operand(csp)
 
 	assignment = {}
