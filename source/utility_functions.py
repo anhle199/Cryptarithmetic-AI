@@ -50,6 +50,16 @@ def write_file(filename, assignment):
     f.close()
     return True # return True if creating file successfully
 
+def solve(csp):
+	infer_last_col(csp)
+	infer_same_operand(csp)
+
+	assignment = {}
+	has_solution = backtracking(assignment, csp, len(csp.constraints) - 1, 0)
+	if has_solution:
+		return assignment
+    return
+
 def degree_heuristic(csp):
     var = None
     count_constraint = 0
