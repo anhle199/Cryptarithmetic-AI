@@ -5,26 +5,37 @@ data: dict { operands, operators, result }
 0TWO
 FOUR
 
-constraints = {
-    operands: [
-        ['0', '0'],
-        ['0', 'T'],
-        ['T', 'W'],
-        ['W', 'O']
-    ],
-    operators: ['+'],
-    result: ['F', 'O', 'U', 'R'],
-    carry: [0, 0, 0]
-}
+constraints = [
+    {
+        operands: ['0', '0'],
+        result: 'F',
+        carry: 0
+    },
+    {
+        operands: ['0', 'T'],
+        result: 'O',
+        carry: 0
+    },
+    {
+        operands: ['T', 'W'],
+        result: 'U',
+        carry: 0
+    },
+    {
+        operands: ['W', 'O'],
+        result: 'R',
+        carry: 0
+    },
+]
+
+operators = ['+']
 
 csp = {
     variables: [operands + result],
-    constraints: {
-        operands: [[]],
-        operators: [],
-        result: [],
-        carry: [int]
-    },
+    constraints: [
+        {operands: [], result: character, carry: int}
+    ]
+    operators: [],
     visited: { character: true or false },
     domains: { character: [numbers] }
 }
