@@ -7,13 +7,8 @@ FOUR
 
 constraints = [
     {
-        operands: ['0', '0'],
-        result: 'F',
-        carry: 0
-    },
-    {
-        operands: ['0', 'T'],
-        result: 'O',
+        operands: ['W', 'O'],
+        result: 'R',
         carry: 0
     },
     {
@@ -22,8 +17,13 @@ constraints = [
         carry: 0
     },
     {
-        operands: ['W', 'O'],
-        result: 'R',
+        operands: ['0', 'T'],
+        result: 'O',
+        carry: 0
+    },
+    {
+        operands: ['0', '0'],
+        result: 'F',
         carry: 0
     },
 ]
@@ -45,7 +45,7 @@ assignment: dict = { character: number }
 clone_domains_of_var: use deepcopy
 
 inferences: dict = {
-	domains_removed: { character: number },
+	domains_removed: { character: [number] },
 	status: true
 }
 // status là true nếu còn gán được

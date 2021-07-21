@@ -10,5 +10,5 @@ Huy
 
 Anh
 6. backtracking(assignment, csp, col, row): true or false
-7. inference(assignment, csp, var, val, is_calc): (domains_removed, status): tuple
-8. sum_cryptarithmetic(assignment, csp, col, domains_removed): true or false
+7. inference(assignment, csp, val): (domains_removed, status): tuple
+8. sum_column(assignment, csp, col, domains_removed): true or false

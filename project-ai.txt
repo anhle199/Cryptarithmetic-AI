@@ -2,7 +2,6 @@ https://github.com/mohilpatel25/cryptarithmetic-puzzle-solver/blob/main/CryptAri
 
 
 def solve(csp):
-	sum_last_col_>=10(csp)
 	same_operand(csp)
 
 	assignment = {}
