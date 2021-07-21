@@ -7,9 +7,8 @@ Hùng
 Huy
 4. create_csp(data): return csp
 5. same_operand(csp): chỉ làm cột đầu tiên bên phải
-6. (csp) // tổng cột đầu lớn hơn 10
 
 Anh
-7. backtracking(assignment, csp, col, row): true or false
-8. inference(assignment, csp, var, val, is_calc): (domains_removed, status): tuple
-9. sum_cryptarithmetic(assignment, csp, col, domains_removed): true or false
+6. backtracking(assignment, csp, col, row): true or false
+7. inference(assignment, csp, val): (domains_removed, status): tuple
+8. sum_column(assignment, csp, col, domains_removed): true or false
