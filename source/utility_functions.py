@@ -1,6 +1,7 @@
 import re
 import copy
 
+
 # Error: return None | Success: return {'operands': operands, 'operators': operators, 'result': result}
 def read_file(filename):
     # open input file
@@ -53,14 +54,6 @@ def write_file(filename, assignment):
     f.close()
     return True # return True if creating file successfully
 
-def solve(csp):
-	infer_same_operand(csp)
-
-	assignment = {}
-	has_solution = backtracking(assignment, csp, len(csp.constraints) - 1, 0)
-	if has_solution:
-		return assignment
-    return
 
 def find_index_of_element_less_than(a, val):
     for i in range(len(a)):
