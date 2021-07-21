@@ -5,21 +5,37 @@ data: dict { operands, operators, result }
 0TWO
 FOUR
 
-operands = [
-    [0, 0],
-    [0, T],
-    [T, W],
-    [W, O]
+constraints = [
+    {
+        operands: ['W', 'O'],
+        result: 'R',
+        carry: 0
+    },
+    {
+        operands: ['T', 'W'],
+        result: 'U',
+        carry: 0
+    },
+    {
+        operands: ['0', 'T'],
+        result: 'O',
+        carry: 0
+    },
+    {
+        operands: ['0', '0'],
+        result: 'F',
+        carry: 0
+    },
 ]
-operators = [+]
-result = [F, O, U, R]
-carry = 0
+
+operators = ['+']
 
 csp = {
     variables: [operands + result],
     constraints: [
-        {operands: [[]], operators: [], result: [], carry: int}
-    ],
+        {operands: [], result: character, carry: int}
+    ]
+    operators: [],
     visited: { character: true or false },
     domains: { character: [numbers] }
 }
@@ -29,7 +45,7 @@ assignment: dict = { character: number }
 clone_domains_of_var: use deepcopy
 
 inferences: dict = {
-	domains_removed: { character: number },
+	domains_removed: { character: [number] },
 	status: true
 }
 // status là true nếu còn gán được
