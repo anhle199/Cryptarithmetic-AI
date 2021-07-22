@@ -82,7 +82,7 @@ def create_csp(data):
         csp["visited"][var] = False
         csp["domains"][var] = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 
-    if longest == result:
+    if len(longest) <= len(result):
         csp['domains'][result[0]].remove(0)
 
     for i in range(len(longest) - 1, -1, -1):
