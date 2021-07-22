@@ -55,17 +55,12 @@ def write_file(filename, assignment):
     return True # return True if creating file successfully
 
 
-def find_index_of_element_less_than(a, val):
-    for i in range(len(a)):
-        if a[i] >= val:
-            return i
-    return len(a)
-
-
 def insert_domains(csp, domains):
     for key, value in domains.items():
-        index = find_index_of_element_less_than(csp['domains'][key], value)
-        csp['domains'][key].insert(index, value)
+        # index = find_index_of_element_less_than(csp['domains'][key], value)
+        # csp['domains'][key].insert(index, value)
+        csp['domains'][key].extend(value)
+        csp['domains'][key].sort()
 
 
 # removes all `val` values in `csp.domains`.
@@ -75,9 +70,10 @@ def insert_domains(csp, domains):
 def inference(assignment, csp, val):
     domains_removed = {}
 
-    for var in csp['domains'].keys():
-        if val in csp['domains'][var].values():
+    for var in csp['domains']:
+        if val in csp['domains'][var]:
             csp['domains'][var].remove(val)
+            domains_removed[var] = []
             domains_removed[var].append(val)
             if not csp['visited'][var] and len(csp['domains'][var]) == 0:
                 return (domains_removed, False)
@@ -85,105 +81,129 @@ def inference(assignment, csp, val):
     return (domains_removed, True)
 
 
+# return value: (is_mark, status)
 def sum_column(assignment, csp, col, domains_removed):
     # sum all element in `col` column
     val = csp['constraints'][col]['carry']
     for operand in csp['constraints'][col]['operands']:
-        val += int(operand)
+        val += 0 if operand == '0' else assignment[operand]
 
     # calculate the carry
-    carrt = val // 10
-    csp['constraints'][col]['carry'] = carry
+    carry = val // 10
     val %= 10
+
+    if col < len(csp['constraints']) - 1:
+        csp['constraints'][col + 1]['carry'] = 0
+
+    var = csp['constraints'][col]['result']
+    domains = csp['domains'][var]
+    if csp['visited'][var]:
+        if assignment[var] == val:
+            if col < len(csp['constraints']) - 1:
+                csp['constraints'][col + 1]['carry'] = carry
+            return (False, True)
+        return (False, False)
+    if val in assignment.values() or val not in domains:  # csp['visited'][var] = false
+        return (False, False)
 
     # if sum is leading, then 0 < sum < 10
     if col == len(csp['constraints']) - 1 and carry != 0:
-        return False
-
-    var = csp['constraints'][col]['result']
-    if csp['visited'][var]:
-        return assignment[var] == val
-    elif val in assignment.values():  # csp['visited'][var] = false
-        return False
+        return (False, False)
+    if col < len(csp['constraints']) - 1:
+        csp['constraints'][col + 1]['carry'] = carry
 
     # apply sum to csp and infer
     assignment[var] = val
+    csp['visited'][var] = True
     infer_result = inference(assignment, csp, val)
 
     for key, value in infer_result[0].items():  # infer_result.domains_removed
-        domains_removed[key].append(value)
+        if key not in domains_removed:
+            domains_removed[key] = []
+        domains_removed[key].extend(value)
 
     if not infer_result[1]:  # infer_result.status
         del assignment[var]
 
-    return infer_result[1]
+    return (True, infer_result[1])
 
 
-def backtracking(assginment, csp, col, i):
+def backtracking(assignment, csp, col, i):
     var = csp['constraints'][col]['operands'][i]
-    is_calc = (i == len(csp['constraints'][col]['operands']))
+    is_calc = (i == len(csp['constraints'][col]['operands']) - 1)
 
     if var != '0' and not csp['visited'][var]:
-        csp['visited'][var] = True
-        domains = copy.deepopy(csp['domains'][var])
+        domains = copy.deepcopy(csp['domains'][var])
 
         for val in domains:
-            if val not in assginment.values():
+            if val not in assignment.values():
                 assignment[var] = val
+                csp['visited'][var] = True
                 (domains_removed, status) = inference(assignment, csp, val)
 
                 if status:
                     result = True
+                    is_mark = False
                     if is_calc:
-                        result = sum_column(assignment, csp, col, domains_removed)
-                        if result:
-                            csp['visited'][csp['constraints'][col]['result']] = True
+                        (is_mark, result) = sum_column(assignment, csp, col, domains_removed)
 
                     if result:
                         if col == len(csp['constraints']) - 1 and is_calc:
                             return result
 
+                        clone_col_i = (col, i)
                         col += 1 if is_calc else 0
                         i = 0 if is_calc else i + 1
                         next_var = csp['constraints'][col]['operands'][i]
-                        clone_domains_next_var = copy.deepcopy(csp['domains'][next_var])
+                        clone_domains_next_var = []
+                        if next_var != '0':
+                            clone_domains_next_var = copy.deepcopy(csp['domains'][next_var])
 
-                        result = backtracking(assginment, csp, col, i)
+                        result = backtracking(assignment, csp, col, i)
                         if result:
                             return result
 
-                        csp['domains'][next_var] = copy.deepcopy(clone_domains_next_var)
-                        if is_calc:
-                            csp['visited'][csp['constraints'][col + 1]['result']] = False
+                        col = clone_col_i[0]
+                        i = clone_col_i[1]
+                        if next_var != '0':
+                            csp['domains'][next_var] = copy.deepcopy(clone_domains_next_var)
+                    if not result and is_mark:
+                        csp['visited'][csp['constraints'][col]['result']] = False
 
                 del assignment[var]
+                csp['visited'][var] = False
                 insert_domains(csp, domains_removed)
                 csp['domains'][var].remove(val)
-
-        csp['visited'][var] = False
         return False
 
     else:
         domains_removed = {}
         result = True
-
+        is_mark = False
         if is_calc:
-            result = sum_column(assignment, csp, col, domains_removed)
-        if not (col == len(csp['constraints']) - 1 and is_calc) and result:
-            col += 1 if is_calc esle 0
-            i = 0 if is_calc else i + 1
-            next_var = csp['constraints'][col]['operands'][i]
-            clone_domains_next_var = copy.deepcopy(csp['domains'][next_var])
+            (is_mark, result) = sum_column(assignment, csp, col, domains_removed)
 
-            if is_calc:
-                csp['visited'][csp['constraints'][col]['result']] = True
+        if not (col == len(csp['constraints']) - 1 and is_calc):
+            if result:
+                clone_col_i = (col, i)
+                col += 1 if is_calc else 0
+                i = 0 if is_calc else i + 1
+                next_var = csp['constraints'][col]['operands'][i]
+                clone_domains_next_var = []
+                if next_var != '0':
+                    clone_domains_next_var = copy.deepcopy(csp['domains'][next_var])
 
-            result = backtracking(assginment, csp, col, i)
-            csp['domains'][next_var] = copy.deepcopy(clone_domains_next_var)
-            if is_calc and not result:
-                csp['visited'][csp['constraints'][col]['result']] = False
+                result = backtracking(assignment, csp, col, i)
+                if result:
+                    return result
 
-        if is_calc and not result:
+                col = clone_col_i[0]
+                i = clone_col_i[1]
+                if next_var != '0':
+                    csp['domains'][next_var] = copy.deepcopy(clone_domains_next_var)
+
+        if not result:
             insert_domains(csp, domains_removed)
-
+            if is_mark:
+                csp['visited'][csp['constraints'][col]['result']] = False
         return result
