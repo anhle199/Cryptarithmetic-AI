@@ -1,5 +1,5 @@
-import re
 import copy
+import re
 
 
 # Error: return None | Success: return {'operands': operands, 'operators': operators, 'result': result}
@@ -207,3 +207,86 @@ def backtracking(assignment, csp, col, i):
             if is_mark:
                 csp['visited'][csp['constraints'][col]['result']] = False
         return result
+
+# Find the longest word
+def find_longest_word(words):
+    if len(words) == 0:
+        return "Empty array"
+    longest = words[0]
+    for i in range(1, len(words)):
+        if len(words[i]) > len(longest):
+            longest = words[i]
+
+    return longest
+
+# Create csp
+def create_csp(data):
+    # Get all fields in data
+    operands, operators, result = data["operands"], data["operators"], data["result"]
+
+    # return format
+    csp = {
+        "variables": [],
+        "constraints": [],
+        "operators": operators,
+        "visited": {},
+        "domains": {}
+    }
+
+    # words_list = [...operands, result]
+    words_list = [operands[i] for i in range(len(operands))]
+    words_list.append(result)
+    longest = find_longest_word(words_list)
+
+    # Transform a single word from TWO to 0TWO - fill up by zero at head
+    for i in range(len(words_list)):
+        words_list[i] = words_list[i].zfill(len(longest))
+
+    for i in range(len(longest) - 1, -1, -1):
+        constraint = {
+            "operands": [],
+            "result": words_list[-1][i],
+            "carry": 0
+        }
+
+        for j in range(len(words_list)):
+            # The last character of a word
+            char = words_list[j][i]
+            constraint["operands"].append(char)
+
+            # Add to csp
+            if char != "0":
+                if char not in csp["variables"]:
+                    csp["variables"].append(char)
+                csp["visited"][char] = False
+                csp["domains"][char] = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+
+        constraint['operands'].pop()
+        csp["constraints"].append(constraint)
+
+    return csp
+
+def same_operand(csp):
+    first_operand = csp["constraints"][0]
+
+    length = len(first_operand["operands"])
+    if length < 2:
+        return
+
+    for i in range(1, length):
+        if (first_operand["operands"][i] != first_operand["operands"][i - 1]):
+            return
+
+    result_char = first_operand["result"]
+    result_char_domain = csp["domains"][result_char]
+
+    # All characters are equal
+
+    if (length % 2 == 0):
+        # Filter domain if result is even
+        result_char_domain = [item for item in result_char_domain if item % 2 == 0]
+    else:
+        # Filter domain if result is odd
+        result_char_domain = [item for item in result_char_domain if item % 2 != 0]
+
+    csp["domains"][result_char] = result_char_domain
