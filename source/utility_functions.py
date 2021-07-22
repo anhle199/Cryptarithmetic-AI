@@ -30,29 +30,77 @@ def read_file(filename):
 
 
 # Error: return False | Success: return True
-def write_file(filename, assignment):
+def write_file(filename, result):
     # create output file
     try:
         f = open(filename, "w")
     except:
         return False # return False if there is an error in creating output file
 
-    result = []
-    for key, value in assignment.items():
-        result.append((key, value))
-
-    def sort_with_key(item): # define sorting criteria
-        return item[0]
-
-    result.sort(key=sort_with_key)
-
-    # write file
-    for item in result:
-        f.write(str(item[1]))
-
-    # close file
+    f.write(result)
     f.close()
     return True # return True if creating file successfully
+
+
+# Find the longest word
+def find_longest_word(words):
+    if len(words) == 0:
+        return "Empty array"
+    longest = words[0]
+    for i in range(1, len(words)):
+        if len(words[i]) > len(longest):
+            longest = words[i]
+
+    return longest
+
+
+# Create csp
+def create_csp(data):
+    # Get all fields in data
+    operands, operators, result = data["operands"], data["operators"], data["result"]
+    variables = list(set(''.join(operands) + result))
+
+    # return format
+    csp = {
+        "variables": copy.deepcopy(variables),
+        "constraints": [],
+        "operators": copy.deepcopy(operators),
+        "visited": {},
+        "domains": {}
+    }
+
+    # words_list = [...operands, result]
+    words_list = copy.deepcopy(operands)
+    words_list.append(result)
+    longest = find_longest_word(words_list)
+
+    # Transform a single word from TWO to 0TWO - fill up by zero at head
+    for i in range(len(words_list)):
+        words_list[i] = words_list[i].zfill(len(longest))
+
+    for var in variables:
+        csp["visited"][var] = False
+        csp["domains"][var] = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+
+    if longest == result:
+        csp['domains'][result[0]].remove(0)
+
+    for i in range(len(longest) - 1, -1, -1):
+        constraint = {
+            "operands": [],
+            "result": words_list[-1][i],
+            "carry": 0
+        }
+
+        for j in range(len(words_list)):
+            # The last character of a word
+            char = words_list[j][i]
+            constraint["operands"].append(char)
+
+        constraint['operands'].pop()
+        csp["constraints"].append(constraint)
+
+    return csp
 
 
 def insert_domains(csp, domains):
@@ -81,12 +129,25 @@ def inference(assignment, csp, val):
     return (domains_removed, True)
 
 
+def calculate(lhs, rhs, operator):
+    if operator == '+':
+        return lhs + rhs
+    if operator == '-':
+        return lhs - rhs
+    if operator == '*':
+        return lhs * rhs
+    return 0
+
+
 # return value: (is_mark, status)
 def sum_column(assignment, csp, col, domains_removed):
     # sum all element in `col` column
     val = csp['constraints'][col]['carry']
-    for operand in csp['constraints'][col]['operands']:
-        val += 0 if operand == '0' else assignment[operand]
+    operands = csp['constraints'][col]['operands']
+    val += 0 if operands[0] == '0' else assignment[operands[0]]
+    for i in range(1, len(operands)):
+        rhs = 0 if operands[i] == '0' else assignment[operands[i]]
+        val = calculate(val, rhs, csp['operators'][i - 1])
 
     # calculate the carry
     carry = val // 10
@@ -207,86 +268,3 @@ def backtracking(assignment, csp, col, i):
             if is_mark:
                 csp['visited'][csp['constraints'][col]['result']] = False
         return result
-
-# Find the longest word
-def find_longest_word(words):
-    if len(words) == 0:
-        return "Empty array"
-    longest = words[0]
-    for i in range(1, len(words)):
-        if len(words[i]) > len(longest):
-            longest = words[i]
-
-    return longest
-
-# Create csp
-def create_csp(data):
-    # Get all fields in data
-    operands, operators, result = data["operands"], data["operators"], data["result"]
-
-    # return format
-    csp = {
-        "variables": [],
-        "constraints": [],
-        "operators": operators,
-        "visited": {},
-        "domains": {}
-    }
-
-    # words_list = [...operands, result]
-    words_list = [operands[i] for i in range(len(operands))]
-    words_list.append(result)
-    longest = find_longest_word(words_list)
-
-    # Transform a single word from TWO to 0TWO - fill up by zero at head
-    for i in range(len(words_list)):
-        words_list[i] = words_list[i].zfill(len(longest))
-
-    for i in range(len(longest) - 1, -1, -1):
-        constraint = {
-            "operands": [],
-            "result": words_list[-1][i],
-            "carry": 0
-        }
-
-        for j in range(len(words_list)):
-            # The last character of a word
-            char = words_list[j][i]
-            constraint["operands"].append(char)
-
-            # Add to csp
-            if char != "0":
-                if char not in csp["variables"]:
-                    csp["variables"].append(char)
-                csp["visited"][char] = False
-                csp["domains"][char] = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-
-        constraint['operands'].pop()
-        csp["constraints"].append(constraint)
-
-    return csp
-
-def same_operand(csp):
-    first_operand = csp["constraints"][0]
-
-    length = len(first_operand["operands"])
-    if length < 2:
-        return
-
-    for i in range(1, length):
-        if (first_operand["operands"][i] != first_operand["operands"][i - 1]):
-            return
-
-    result_char = first_operand["result"]
-    result_char_domain = csp["domains"][result_char]
-
-    # All characters are equal
-
-    if (length % 2 == 0):
-        # Filter domain if result is even
-        result_char_domain = [item for item in result_char_domain if item % 2 == 0]
-    else:
-        # Filter domain if result is odd
-        result_char_domain = [item for item in result_char_domain if item % 2 != 0]
-
-    csp["domains"][result_char] = result_char_domain
