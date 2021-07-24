@@ -37,7 +37,8 @@ csp = {
     ]
     operators: [],
     visited: { character: true or false },
-    domains: { character: [numbers] }
+    domains: { character: [numbers] },
+    length: { result: int, longest_operand: int }
 }
 
 assignment: dict = { character: number }

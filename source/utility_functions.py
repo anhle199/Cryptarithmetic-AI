@@ -66,24 +66,46 @@ def create_csp(data):
         "constraints": [],
         "operators": copy.deepcopy(operators),
         "visited": {},
-        "domains": {}
+        "domains": {},
+        'length': {}
     }
 
-    # words_list = [...operands, result]
-    words_list = copy.deepcopy(operands)
-    words_list.append(result)
-    longest = find_longest_word(words_list)
-
-    # Transform a single word from TWO to 0TWO - fill up by zero at head
-    for i in range(len(words_list)):
-        words_list[i] = words_list[i].zfill(len(longest))
-
+    # initialize `visited` and `domains` properties of csp
     for var in variables:
         csp["visited"][var] = False
         csp["domains"][var] = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 
-    if len(longest) <= len(result):
-        csp['domains'][result[0]].remove(0)
+    # find the word has longest length
+    longest = find_longest_word(operands)
+    csp['length'] = {
+        'longest_operand': len(longest),
+        'result': len(result)
+    }
+    if len(longest) < len(result):
+        longest = result
+
+    # words_list = [...operands, result]
+    words_list = copy.deepcopy(operands)
+    words_list.append(result)
+
+
+    # some leadings is not equal to zero
+    leading_possible_zero = set()
+    leading_impossible_zero = set()
+    for word in words_list:
+        if len(word) == 1:
+            leading_possible_zero.add(word[0])
+        else:
+            leading_impossible_zero.add(word[0])
+
+    leading_impossible_zero.difference_update(leading_possible_zero)
+    for var in leading_impossible_zero:
+        csp['domains'][var].remove(0)
+
+
+    # Transform a single word from TWO to 0TWO - fill up by zero at head
+    for i in range(len(words_list)):
+        words_list[i] = words_list[i].zfill(len(longest))
 
     for i in range(len(longest) - 1, -1, -1):
         constraint = {
@@ -139,6 +161,35 @@ def calculate(lhs, rhs, operator):
     return 0
 
 
+def sum_all_rest_leading(assignment, csp):
+    len_result, len_longest = csp['length']['result'], csp['length']['longest_operand']
+    values = str(csp['constraints'][len_longest]['carry'])
+    offset = len_result - len_longest
+
+    if len(set(values)) == len(values) and len(values) == offset:
+        j = offset
+        for i in range(len_longest, len_result):
+            j -= 1
+            var = csp['constraints'][i]['result']
+            val = int(values[j])
+            if csp['visited'][var] and assignment[var] != val:
+                return False
+            if not csp['visited'][var] and (val in assignment or val not in csp['domains'][var]):
+                    return False
+
+        j = offset
+        for i in range(len_longest, len_result):
+            j -= 1
+            var = csp['constraints'][i]['result']
+            val = int(values[j])
+            assignment[var] = val
+
+        return True
+
+    else:
+        return False
+
+
 # return value: (is_mark, status)
 def sum_column(assignment, csp, col, domains_removed):
     # sum all element in `col` column
@@ -190,6 +241,10 @@ def sum_column(assignment, csp, col, domains_removed):
 
 
 def backtracking(assignment, csp, col, i):
+    len_result, len_longest = csp['length']['result'], csp['length']['longest_operand']
+    if col == csp['length']['longest_operand'] and len_result > len_longest:
+        return sum_all_rest_leading(assignment, csp)
+
     var = csp['constraints'][col]['operands'][i]
     is_calc = (i == len(csp['constraints'][col]['operands']) - 1)
 

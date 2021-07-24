@@ -25,10 +25,12 @@ if __name__ == '__main__':
         has_solution = (assignment != None)
         if has_solution:
             result = ''
+            variables = ''
             for item in sorted(assignment.items()):
                 result += str(item[1])
+                variables += item[0]
 
         write_file(output_file_path, result)
-        print(result)
+        print(variables, '=', result)
     else:
         print('Cannot open:', input_file_path)
