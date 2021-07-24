@@ -1,14 +1,47 @@
-Hùng
 1. read_file(filename): return `data` variable
-2. write_file(filename, number)
-3. solve(csp): `assignment` variable or None
+    - Return value:
+        Error: None
+        Success: {'operands': operands, 'operators': operators, 'result': result}
+
+2. write_file(filename, result):
+    - Return value:
+        Error: False
+        Success: True
+
+3. solve(csp):
+    - Return value:
+        Has solution: `assignment` variable: { variable: value }
+        No Solution: None
+
+4. create_csp(data):
+    - Return value: `csp` variable in data.txt file
+
+5. find_longest_word(words):
+    - Return value: a word in `words` list that has longest length
+
+6. insert_domains(csp, domains):
+    - No return value
+    - Append all elements in `domains` to `csp`
+
+7. inference(assignment, csp, val):
+    - Return value: a `(domains_removed, status)` tuple
+
+8. calculate(lhs, rhs, operator):
+    - Return value: a integer number
+
+9. sum_all_rest_leading(assignment, csp):
+    - Return value:
+        Invalid: False
+        Valid: True
+
+10. sum_column(assignment, csp, col, domains_removed):
+    - Return value:
+        Invalid: False
+        Valid: True
+
+11. backtracking(assignment, csp, col, row):
+    Return value:
+        Has solution: True
+        No solution: False
 
 
-Huy
-4. create_csp(data): return csp
-5. same_operand(csp): chỉ làm cột đầu tiên bên phải
-
-Anh
-6. backtracking(assignment, csp, col, row): true or false
-7. inference(assignment, csp, val): (domains_removed, status): tuple
-8. sum_column(assignment, csp, col, domains_removed): true or false
