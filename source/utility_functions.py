@@ -172,9 +172,10 @@ def sum_all_rest_leading(assignment, csp):
             j -= 1
             var = csp['constraints'][i]['result']
             val = int(values[j])
+
             if csp['visited'][var] and assignment[var] != val:
                 return False
-            if not csp['visited'][var] and (val in assignment or val not in csp['domains'][var]):
+            if not csp['visited'][var] and (val in assignment.values() or val not in csp['domains'][var]):
                     return False
 
         j = offset
@@ -283,7 +284,11 @@ def backtracking(assignment, csp, col, i):
                         i = clone_col_i[1]
                         if next_var != '0':
                             csp['domains'][next_var] = copy.deepcopy(clone_domains_next_var)
-                    if not result and is_mark:
+                        if not result and is_mark:
+                            var_result = csp['constraints'][col]['result']
+                            csp['visited'][var_result] = False
+                            del assignment[var_result]
+                    elif is_mark:  # result == False
                         csp['visited'][csp['constraints'][col]['result']] = False
 
                 del assignment[var]

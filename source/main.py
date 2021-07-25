@@ -7,6 +7,7 @@ def solve(csp):
 
     assignment = {}
     has_solution = backtracking(assignment, csp, 0, 0)
+
     if has_solution:
         return assignment
     return None
@@ -25,12 +26,13 @@ if __name__ == '__main__':
         has_solution = (assignment != None)
         if has_solution:
             result = ''
-            variables = ''
+            variables = ''  # this line need deleteing when submitting
             for item in sorted(assignment.items()):
                 result += str(item[1])
-                variables += item[0]
+                variables += item[0]  # this line need deleteing when submitting
+            print(variables, '=', end='')  # this line need deleteing when submitting
 
-        write_file(output_file_path, result)
-        print(variables, '=', result)
+        # write_file(output_file_path, result)
+        print(result)
     else:
         print('Cannot open:', input_file_path)
