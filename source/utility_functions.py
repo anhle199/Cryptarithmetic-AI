@@ -1,6 +1,39 @@
 import re
 import copy
 
+# this function is used for breaking all brackets in the expression
+def break_bracket(operators):
+    reList = []
+    n = len(operators)
+    reverseFlag = False
+    index = 0 
+    while (index < n):
+        if (operators[index] == "("):
+            if (reverseFlag):
+                next = index + 1
+                while (True):
+                    if (operators[next] == "+"):
+                        reList.append("-")
+                        reverseFlag = True
+                    elif (operators[next] == "-"):
+                        reList.append("+")
+                        reverseFlag = False
+                    elif (operators[next] == "("):
+                        index = next - 1
+                        break
+                    elif (operators[next] == ")"):
+                        index = next
+                        break
+                    next += 1
+        elif (operators[index] != ")"):
+            if (operators[index] == "+"):
+                reverseFlag = False
+            else:
+                reverseFlag = True
+            reList.append(operators[index])
+        index += 1
+    return reList                  
+
 # Error: return None | Success: return {'operands': operands, 'operators': operators, 'result': result}
 def read_file(filename):
     # open input file
@@ -16,16 +49,18 @@ def read_file(filename):
 
     # process input string
     temp_string = f.readline()
-    for item in re.split(r"([+-=*])", temp_string):
-        if item == "+" or item == "-" or item == "*":
+    for item in re.split(r"([+-=()*])", temp_string):
+        if item == "+" or item == "-" or item == "*" or item == "(" or item == ")":
             operators.append(item)
-        elif item != "=":
+        elif item != "=" and item != "":
             operands.append(item)
     result = operands.pop()
 
+    post_processing_operators = break_bracket(operators)
+
     # close file and return result
     f.close()
-    return {'operands': operands, 'operators': operators, 'result': result} # successfully read file
+    return {'operands': operands, 'operators': post_processing_operators, 'result': result} # successfully read file
 
 
 # Error: return False | Success: return True
@@ -53,7 +88,7 @@ def write_file(filename, assignment):
     f.close()
     return True # return True if creating file successfully
 
-def solve(csp):
+"""def solve(csp):
 	infer_same_operand(csp)
 
 	assignment = {}
@@ -193,4 +228,4 @@ def backtracking(assginment, csp, col, i):
         if is_calc and not result:
             insert_domains(csp, domains_removed)
 
-        return result
+        return result"""
