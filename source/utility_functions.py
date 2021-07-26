@@ -235,9 +235,15 @@ def sum_column(assignment, csp, col, domains_removed):
         rhs = 0 if operands[i] == '0' else assignment[operands[i]]
         val = calculate(val, rhs, csp['operators'][i - 1])
 
-    # calculate the carry
-    carry = val // 10
-    val %= 10
+    # calculate carry and calculate again result to match with carry
+    carry = 0
+    if val < 0:
+        while val < 0:
+            val += 10
+            carry -= 1
+    else:
+        carry = val // 10
+        val %= 10
 
     if col < len(csp['constraints']) - 1:
         csp['constraints'][col + 1]['carry'] = 0
@@ -290,16 +296,23 @@ def backtracking(assignment, csp, col, i):
 
         for val in domains:
             if val not in assignment.values():
+                # print(1, assignment)
+                # print(1, csp['visited'])
                 assignment[var] = val
                 csp['visited'][var] = True
+                # print(1, assignment)
+                # print(1, csp['visited'])
                 (domains_removed, status) = inference(assignment, csp, val)
 
                 if status:
                     result = True
                     is_mark = False
                     if is_calc:
+                        # print(2, assignment)
+                        # print(2, csp['visited'])
                         (is_mark, result) = sum_column(assignment, csp, col, domains_removed)
-
+                        # print(2, assignment)
+                        # print(2, csp['visited'])
                     if result:
                         if col == len(csp['constraints']) - 1 and is_calc:
                             return result
@@ -312,7 +325,11 @@ def backtracking(assignment, csp, col, i):
                         if next_var != '0':
                             clone_domains_next_var = copy.deepcopy(csp['domains'][next_var])
 
+                        # print(3, assignment)
+                        # print(3, csp['visited'])
                         result = backtracking(assignment, csp, col, i)
+                        # print(3, assignment)
+                        # print(3, csp['visited'])
                         if result:
                             return result
 
@@ -322,13 +339,22 @@ def backtracking(assignment, csp, col, i):
                             csp['domains'][next_var] = copy.deepcopy(clone_domains_next_var)
                         if not result and is_mark:
                             var_result = csp['constraints'][col]['result']
+                            # print(4, assignment)
+                            # print(4, csp['visited'])
                             csp['visited'][var_result] = False
                             del assignment[var_result]
+                            # print(4, assignment)
+                            # print(4, csp['visited'])
+
                     elif is_mark:  # result == False
                         csp['visited'][csp['constraints'][col]['result']] = False
 
+                # print(5, assignment)
+                # print(5, csp['visited'])
                 del assignment[var]
                 csp['visited'][var] = False
+                # print(5, assignment)
+                # print(5, csp['visited'])
                 insert_domains(csp, domains_removed)
                 csp['domains'][var].remove(val)
         return False
@@ -338,8 +364,11 @@ def backtracking(assignment, csp, col, i):
         result = True
         is_mark = False
         if is_calc:
+            # print(6, assignment)
+            # print(6, csp['visited'])
             (is_mark, result) = sum_column(assignment, csp, col, domains_removed)
-
+            # print(6, assignment)
+            # print(6, csp['visited'])
         if not (col == len(csp['constraints']) - 1 and is_calc):
             if result:
                 clone_col_i = (col, i)
@@ -350,7 +379,11 @@ def backtracking(assignment, csp, col, i):
                 if next_var != '0':
                     clone_domains_next_var = copy.deepcopy(csp['domains'][next_var])
 
+                # print(7, assignment)
+                # print(7, csp['visited'])
                 result = backtracking(assignment, csp, col, i)
+                # print(7, assignment)
+                # print(7, csp['visited'])
                 if result:
                     return result
 
@@ -362,5 +395,11 @@ def backtracking(assignment, csp, col, i):
         if not result:
             insert_domains(csp, domains_removed)
             if is_mark:
-                csp['visited'][csp['constraints'][col]['result']] = False
+                var_result = csp['constraints'][col]['result']
+                # print(8, assignment)
+                # print(8, csp['visited'])
+                csp['visited'][var_result] = False
+                del assignment[var_result]
+                # print(8, assignment)
+                # print(8, csp['visited'])
         return result
