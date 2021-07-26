@@ -300,7 +300,7 @@ def sum_column(assignment, csp, col, domains_removed):
 
 def backtracking(assignment, csp, col, i):
     len_result, len_longest = csp['length']['result'], csp['length']['longest_operand']
-    if col == csp['length']['longest_operand'] and len_result > len_longest:
+    if col == csp['length']['longest_operand'] and len_result > len_longest and csp['constraints'][col]['carry'] >= 0:
         return sum_all_rest_leading(assignment, csp)
 
     var = csp['constraints'][col]['operands'][i]
