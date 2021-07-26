@@ -246,6 +246,8 @@ def sum_column(assignment, csp, col, domains_removed):
     domains = csp['domains'][var]
     if csp['visited'][var]:
         if assignment[var] == val:
+            if col == len(csp['constraints']) - 1 and carry != 0:
+                return (False, False)
             if col < len(csp['constraints']) - 1:
                 csp['constraints'][col + 1]['carry'] = carry
             return (False, True)
