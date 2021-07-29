@@ -30,8 +30,7 @@ if __name__ == '__main__':
             for item in sorted(assignment.items()):
                 result += str(item[1])
                 variables += item[0]  # this line need deleteing when submitting
-            print(variables, '=', end=' ')  # this line need deleteing when submitting
-
+            print(variables, '=', end = ' ')  # this line need deleteing when submitting
         # write_file(output_file_path, result)
         print(result)
     else:

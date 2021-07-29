@@ -7,7 +7,7 @@ def break_bracket(operators):
     reList = []
     n = len(operators)
     reverse_flag = False
-    index = 0 
+    index = 0
     while (index < n):
         if (operators[index] == "("):
             if (reverse_flag):
@@ -33,7 +33,7 @@ def break_bracket(operators):
                 reverse_flag = True
             reList.append(operators[index])
         index += 1
-    return reList                  
+    return reList
 
 # Error: return None | Success: return {'operands': operands, 'operators': operators, 'result': result}
 def read_file(filename):
@@ -50,6 +50,8 @@ def read_file(filename):
 
     # process input string
     temp_string = f.readline()
+    if temp_string[-1] == '\n':
+        temp_string = temp_string[:-1]
     for item in re.split(r"([+-=()*])", temp_string):
         if item == "+" or item == "-" or item == "*" or item == "(" or item == ")":
             operators.append(item)
