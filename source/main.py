@@ -21,11 +21,12 @@ def first_three_level(csp):
 def solve(input_filename, output_filename):
     data = read_file(input_filename)
     if data != None:
-        csp = create_csp(data)
-        assignment = None
-        if csp['operators'][0] == '*':  # level 4
-            assignment = None
+        csp, assignment = None, None
+        if data['operators'][0] == '*':  # level 4
+            print('NOT IMPLEMENT')
+            return
         else:  # level 1, 2, 3
+            csp = create_csp(data)
             assignment = first_three_level(csp)
 
         result = 'NO SOLUTION'
