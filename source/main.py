@@ -19,9 +19,6 @@ def first_three_level(csp):
 
 
 def solve(input_filename, output_filename):
-    input_filename = sys.argv[1]
-    output_filename = 'output.txt'
-
     data = read_file(input_filename)
     if data != None:
         csp = create_csp(data)
@@ -35,11 +32,11 @@ def solve(input_filename, output_filename):
         has_solution = (assignment != None)
         if has_solution:
             result = ''
-            variables = ''  # this line need deleteing when submitting
+            variables = ''
             for item in sorted(assignment.items()):
                 result += str(item[1])
-                variables += item[0]  # this line need deleteing when submitting
-            print(variables, '=', end = ' ')  # this line need deleteing when submitting
+                variables += item[0]
+            print(variables, '=', end = ' ')
 
         write_file(output_filename, result)
         print(result)
