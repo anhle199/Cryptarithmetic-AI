@@ -23,7 +23,7 @@ def solve(input_filename, output_filename):
     if data != None:
         csp, assignment = None, None
         if data['operators'][0] == '*':  # level 4
-            print('NOT IMPLEMENT')
+            print('Not implement for level 4.')
             return
         else:  # level 1, 2, 3
             csp = create_csp(data)
