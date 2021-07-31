@@ -59,7 +59,7 @@ def create_csp(data):
 
     # words_list = [...operands, result]
     words_list = copy.deepcopy(operands)
-    words_list.append(result)
+    # words_list.append(result)
 
 
     # some leadings is not equal to zero
@@ -71,11 +71,17 @@ def create_csp(data):
         else:
             leading_impossible_zero.add(word[0])
 
+    if len(result) == 1 and result[0] not in leading_impossible_zero:
+        leading_possible_zero.add(result[0])
+    else:
+        leading_impossible_zero.add(result[0])
+
     leading_impossible_zero.difference_update(leading_possible_zero)
     for var in leading_impossible_zero:
         csp['domains'][var].remove(0)
 
 
+    words_list.append(result)
     # Transform a single word from TWO to 0TWO - fill up by zero at head
     for i in range(len(words_list)):
         words_list[i] = words_list[i].zfill(len(longest))
