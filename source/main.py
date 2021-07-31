@@ -18,7 +18,7 @@ def solve(input_filename, output_filename):
                 csp = level_four.create_csp(data)
                 assignment = level_four.execute(csp, bridge)
         else:  # level 1, 2, 3
-            csp = create_csp(data)
+            csp = first_three_level.create_csp(data)
             assignment = first_three_level.execute(csp, bridge)
 
         result = 'NO SOLUTION'
