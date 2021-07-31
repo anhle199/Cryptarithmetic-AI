@@ -29,7 +29,7 @@ def solve(input_filename, output_filename):
             for item in sorted(assignment.items()):
                 result += str(item[1])
                 variables += item[0]
-            print(variables, '=', end = ' ')
+            print(variables, '=', end=' ')
 
         utility_funcs.write_file(output_filename, result)
         print(result)
