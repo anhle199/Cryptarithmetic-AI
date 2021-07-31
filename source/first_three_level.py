@@ -1,83 +1,18 @@
 import copy
 import re
+import utility_funcs
 
 
-# this function is used for breaking all brackets in the expression
-def break_bracket(operators):
-    reList = []
-    n = len(operators)
-    reverse_flag = False
-    index = 0
-    while (index < n):
-        if (operators[index] == "("):
-            if (reverse_flag):
-                next = index + 1
-                while (True):
-                    if (operators[next] == "+"):
-                        reList.append("-")
-                        reverse_flag = True
-                    elif (operators[next] == "-"):
-                        reList.append("+")
-                        reverse_flag = False
-                    elif (operators[next] == "("):
-                        index = next - 1
-                        break
-                    elif (operators[next] == ")"):
-                        index = next
-                        break
-                    next += 1
-        elif (operators[index] != ")"):
-            if (operators[index] == "+"):
-                reverse_flag = False
-            else:
-                reverse_flag = True
-            reList.append(operators[index])
-        index += 1
-    return reList
+def execute(csp, bridge):
+    if len(csp['variables']) > 10:
+        return None
 
+    assignment = {}
+    has_solution = backtracking(assignment, csp, 0, 0, bridge)
 
-# Error: return None | Success: return {'operands': operands, 'operators': operators, 'result': result}
-def read_file(filename):
-    # open input file
-    try:
-        f = open(filename, "r")
-    except FileNotFoundError:
-        return None # return None if there is an error in opening input file
-
-    # variables for returning
-    operands = []
-    operators = []
-    result = ""
-
-    # process input string
-    temp_string = f.readline()
-    if temp_string[-1] == '\n':
-        temp_string = temp_string[:-1]
-    for item in re.split(r"([+-=()*])", temp_string):
-        if item == "+" or item == "-" or item == "*" or item == "(" or item == ")":
-            operators.append(item)
-        elif item != "=" and item != "":
-            operands.append(item)
-    result = operands.pop()
-
-    post_processing_operators = break_bracket(operators)
-
-    # close file and return result
-    f.close()
-    return {'operands': operands, 'operators': post_processing_operators, 'result': result} # successfully read file
-
-
-# Error: return False | Success: return True
-def write_file(filename, result):
-    # create output file
-    try:
-        f = open(filename, "w")
-    except:
-        return False # return False if there is an error in creating output file
-
-    f.write(result)
-    f.close()
-    return True # return True if creating file successfully
+    if has_solution:
+        return assignment
+    return None
 
 
 # Find the longest word
@@ -163,40 +98,6 @@ def create_csp(data):
     return csp
 
 
-def insert_domains(csp, domains):
-    for key, value in domains.items():
-        csp['domains'][key].extend(value)
-        csp['domains'][key].sort()
-
-
-# removes all `val` values in `csp.domains`.
-# validate remaining domains of all variables in the csp.
-# if the rest domains is valid, then `status` is `True`;
-# otherwise `status` is `False`.
-def inference(assignment, csp, val):
-    domains_removed = {}
-
-    for var in csp['domains']:
-        if val in csp['domains'][var]:
-            csp['domains'][var].remove(val)
-            domains_removed[var] = []
-            domains_removed[var].append(val)
-            if not csp['visited'][var] and len(csp['domains'][var]) == 0:
-                return (domains_removed, False)
-
-    return (domains_removed, True)
-
-
-def calc(lhs, rhs, operator):
-    if operator == '+':
-        return lhs + rhs
-    if operator == '-':
-        return lhs - rhs
-    if operator == '*':
-        return lhs * rhs
-    return 0
-
-
 def calc_all_rest_leading(assignment, csp):
     len_result, len_longest = csp['length']['result'], csp['length']['longest_operand']
     values = str(csp['constraints'][len_longest]['carry'])
@@ -224,6 +125,16 @@ def calc_all_rest_leading(assignment, csp):
         return True
     else:
         return False
+
+
+def calc(lhs, rhs, operator):
+    if operator == '+':
+        return lhs + rhs
+    if operator == '-':
+        return lhs - rhs
+    if operator == '*':
+        return lhs * rhs
+    return 0
 
 
 # return value: (status, is_mark, is_removed)
@@ -283,7 +194,7 @@ def calc_column(assignment, csp, col, domains_removed):
     assignment[var] = val
     csp['visited'][var] = True
     is_removed = False
-    infer_result = inference(assignment, csp, val)
+    infer_result = utility_funcs.inference(csp, val)
 
     for key, value in infer_result[0].items():  # infer_result.domains_removed
         if key not in domains_removed:
@@ -321,7 +232,7 @@ def backtracking(assignment, csp, col, i, bridge):
             if val not in assignment.values():
                 assignment[var] = val
                 csp['visited'][var] = True
-                (domains_removed, status) = inference(assignment, csp, val)
+                (domains_removed, status) = utility_funcs.inference(csp, val)
 
                 if status:
                     result, is_mark, is_removed = True, False, None
@@ -354,7 +265,7 @@ def backtracking(assignment, csp, col, i, bridge):
 
                 del assignment[var]
                 csp['visited'][var] = False
-                insert_domains(csp, domains_removed)
+                utility_funcs.insert_domains(csp, domains_removed)
                 csp['domains'][var].remove(val)
 
         return False
@@ -381,7 +292,7 @@ def backtracking(assignment, csp, col, i, bridge):
                     csp['domains'][next_var] = copy.deepcopy(clone_domains_next_var)
 
         if not result:
-            insert_domains(csp, domains_removed)
+            utility_funcs.insert_domains(csp, domains_removed)
             if is_mark:
                 var_result = csp['constraints'][col]['result']
                 csp['visited'][var_result] = False
